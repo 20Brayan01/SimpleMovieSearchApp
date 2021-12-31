@@ -39,15 +39,15 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        //viewHolder.title.setText(items.get(i).getLogin());
-        MovieModel movie = movies.get(i);
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+        //viewHolder.title.setText(items.get(position).getLogin());
+        MovieModel movie = movies.get(position);
 
-        viewHolder.title.setText(movie.getTitle());
+        viewHolder.title.setText(movie.getTitle() + " # " + position);
 
         //Log.d("ItemAdapter", movie.getImage());
         Glide.with(context)
-                .load("https://image.tmdb.org/t/p/w500/" + movies.get(i).getPoster_path())
+                .load("https://image.tmdb.org/t/p/w500/" + movies.get(position).getPoster_path())
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .error(R.drawable.ic_launcher_background)
                 .listener(new RequestListener<Drawable>() {
@@ -69,7 +69,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        Log.d("Size?: ", String.valueOf(movies.size()));
+        Log.d("Size? : ", String.valueOf(movies.size()));
         return movies.size();
     }
 
@@ -82,6 +82,17 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             title = itemView.findViewById(R.id.tv_movie_name);
             ivAvatar = itemView.findViewById(R.id.img_movie);
         }
+    }
+
+    public void addMovie(List<MovieModel> newMovies) {
+        int initialSize = movies.size();
+        movies.addAll(newMovies);
+        notifyItemRangeInserted(initialSize, newMovies.size());
+    }
+
+    public void resetList() {
+        movies.clear();
+        notifyDataSetChanged();
     }
 }
 

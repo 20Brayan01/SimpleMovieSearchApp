@@ -11,6 +11,7 @@ public interface Service {
 
     @GET("search/movie/?api_key=bfb7fd8f442e030e738ab0fb17221100")
     Call<MovieResponse> searchMovies(
-            @Query("query") String query
+            @Query("query") String query,
+            @Query("page") int page
     );
 }

@@ -8,7 +8,7 @@
     <ImageView
         android:id="@+id/img_movie"
         android:layout_width="170dp"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_margin="22dp"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,6 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:text="User Name:"
-
         app:layout_constraintStart_toEndOf="@id/img_movie"
         app:layout_constraintTop_toTopOf="@id/img_movie" />
 
