@@ -5,8 +5,10 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/row_movies.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/row_slider.xml" value="0.24583333333333332" />
+        <entry key="app/src/main/res/layout/slide_item_container.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.1" />
       </map>
     </option>

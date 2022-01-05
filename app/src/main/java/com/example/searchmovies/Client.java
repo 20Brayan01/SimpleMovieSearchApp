@@ -17,7 +17,3 @@ public class Client {
         return retrofit;
     }
 }
-//
-//    public static final String BASE_URL = "https://api.themoviedb.org/3/";
-//
-//    public static final String API_KEY = "bfb7fd8f442e030e738ab0fb17221100";

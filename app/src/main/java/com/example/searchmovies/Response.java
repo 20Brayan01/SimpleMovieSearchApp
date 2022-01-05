@@ -10,13 +10,13 @@ public class Response {
     private String errorMessage;
 
     @SerializedName("items")
-    private List<MovieModel> items;
+    private List<Movie> items;
 
     public String getErrorMessage() {
         return errorMessage;
     }
 
-    public List<MovieModel> getItems() {
+    public List<Movie> getItems() {
         return items;
     }
 }

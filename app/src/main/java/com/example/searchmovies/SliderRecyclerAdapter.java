@@ -12,40 +12,42 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+public class SliderRecyclerAdapter extends  RecyclerView.Adapter<SliderRecyclerAdapter.ViewHolder> {
 
     List<Movie> movies;
     private Context context;
+    private ViewPager2 viewPager;
 
-    public Adapter(Context applicationContext, List<Movie> movieArrayList) {
+    public SliderRecyclerAdapter(Context applicationContext, List<Movie> movieArrayList, ViewPager2 viewPager) {
         this.movies = movieArrayList;
         this.context = applicationContext;
+        this.viewPager = viewPager;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_movies, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.slide_item_container, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        //viewHolder.title.setText(items.get(position).getLogin());
         Movie movie = movies.get(position);
 
-        viewHolder.title.setText(movie.getTitle() + " # " + position);
+       // viewHolder.title.setText(movie.getTitle() + " # " + position);
 
-        //Log.d("ItemAdapter", movie.getImage());
         Glide.with(context)
                 .load("https://image.tmdb.org/t/p/w500/" + movies.get(position).getPosterPath())
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -71,12 +73,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
+        private TextView rate;
         private ImageView ivAvatar;
+        private RoundedImageView roundedImageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.tv_movie_name);
-            ivAvatar = itemView.findViewById(R.id.img_movie);
+            //title = itemView.findViewById(R.id.tv_slider_movie_name);
+            ivAvatar = itemView.findViewById(R.id.imageSlide);
         }
     }
 

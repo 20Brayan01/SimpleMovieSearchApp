@@ -9,17 +9,17 @@ public class MovieResponse {
 
     @SerializedName("results")
     @Expose
-    private List<MovieModel> movies;
+    private List<Movie> movies;
 
-    public List<MovieModel> getItems() {
+    public List<Movie> getItems() {
         return movies;
     }
 
-    public void setItems(List<MovieModel> movies) {
+    public void setItems(List<Movie> movies) {
         this.movies = movies;
     }
 
-    public List<MovieModel> getMovies(){
+    public List<Movie> getMovies(){
         return movies;
     }
 }
