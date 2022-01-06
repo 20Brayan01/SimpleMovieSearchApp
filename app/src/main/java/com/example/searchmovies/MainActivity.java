@@ -1,7 +1,7 @@
 package com.example.searchmovies;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,11 +20,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private RecyclerView sliderView;
     private ViewPager2 viewPager;
     private Adapter itemAdapter;
     private SliderRecyclerAdapter sliderRecyclerAdapter;
-    private List<Movie> movies;
     boolean isLoading = false;
     int defaultPage = 1, limit = 3;
     int currentPage = defaultPage;
@@ -40,9 +38,36 @@ public class MainActivity extends AppCompatActivity {
         searchMovieViewModel = new ViewModelProvider(this).get(SearchMovieViewModel.class);
         loadMoviesViewModel = new ViewModelProvider(this).get(LoadMoviesViewModel.class);
         sliderMovieViewModel = new ViewModelProvider(this).get(SliderMovieViewModel.class);
-        initViews();
-    }
 
+        itemAdapter = new Adapter(this, new ArrayList<>());
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.smoothScrollToPosition(0);
+        recyclerView.setAdapter(itemAdapter);
+        recyclerView.smoothScrollToPosition(0);
+
+        //Slider
+        viewPager = findViewById(R.id.slide_view_pager);
+        sliderRecyclerAdapter = new SliderRecyclerAdapter(MainActivity.this, new ArrayList<>(), viewPager); //TODO
+        viewPager.setAdapter(sliderRecyclerAdapter);
+        sliderMovieViewModel
+                .getMoviesListObserver().observe(this, new Observer<MovieResponse>() {
+                    @Override
+                    public void onChanged(MovieResponse movieResponse) {
+                        sliderRecyclerAdapter.addMovie(movieResponse.getMovies());
+                    }
+
+                });
+        sliderMovieViewModel.sliderLoadJson();
+
+        loadMoviesViewModel.getMoviesListObserver().observe(this, new Observer<MovieResponse>() {
+            @Override
+            public void onChanged(MovieResponse movieResponse) {
+                itemAdapter.addMovie(movieResponse.getMovies());
+            }
+        });
+        loadMoviesViewModel.loadJson();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
                 currentPage = defaultPage;
                 itemAdapter.resetList();
                 searchMovieViewModel.search(currentSearchTerm, currentPage);
+                searchMovieViewModel.getMoviesListObserver().observe(MainActivity.this, new Observer<MovieResponse>() {
+                    @Override
+                    public void onChanged(MovieResponse movieResponse) {
+                        itemAdapter.addMovie(movieResponse.getMovies());
+                    }
+                });
                 currentPage++;
                 return false;
             }
@@ -69,41 +100,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return true;
-    }
-
-    public void initViews() {
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.smoothScrollToPosition(0);
-        //itemAdapter = new Adapter(MainActivity.this, new ArrayList<>());
-        recyclerView.setAdapter(itemAdapter);
-        recyclerView.smoothScrollToPosition(0);
-        loadMoviesViewModel.loadJson();
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
-                int visibleItemCount = lm.getChildCount();
-                int totalItemCount = lm.getItemCount();
-                int pastVisibleItems = lm.findFirstVisibleItemPosition();
-                if (pastVisibleItems + visibleItemCount >= totalItemCount) {
-                    //End of list
-                    if (currentPage < limit && !isLoading && currentSearchTerm != null) {
-                        ++currentPage;
-                        searchMovieViewModel.search(currentSearchTerm, currentPage);
-
-                    }
-                }
-            }
-        });
-        viewPager = findViewById(R.id.slide_view_pager);
-        //sliderView = findViewById(R.id.slide_recycler);
-        //sliderView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, true));
-        //sliderView.smoothScrollToPosition(0);
-        //    sliderRecyclerAdapter = new SliderRecyclerAdapter(MainActivity.this, new ArrayList<>(), viewPager); //TODO
-        //sliderView.setAdapter(sliderRecyclerAdapter);
-        viewPager.setAdapter(sliderRecyclerAdapter);
-        sliderMovieViewModel.sliderLoadJson();
     }
 }

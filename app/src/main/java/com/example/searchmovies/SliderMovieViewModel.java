@@ -2,14 +2,13 @@ package com.example.searchmovies;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,9 +17,17 @@ import retrofit2.Response;
 public class SliderMovieViewModel extends ViewModel {
 
     Context context;
-    ViewPager2 viewPager;
-    private TextView disconnectedTV;
-    private SliderRecyclerAdapter sliderRecyclerAdapter = new SliderRecyclerAdapter(context, new ArrayList<>(), viewPager);
+    private MutableLiveData<MovieResponse> moviesList;
+    private List<MovieResponse> movieResponseList = new ArrayList<>();
+
+    public SliderMovieViewModel() {
+        moviesList = new MutableLiveData<>();
+    }
+
+    public MutableLiveData<MovieResponse> getMoviesListObserver() {
+        return moviesList;
+
+    }
 
     public void sliderLoadJson() {
         try {
@@ -35,14 +42,14 @@ public class SliderMovieViewModel extends ViewModel {
                     MovieResponse movieResponse;
                     Log.d("status code", String.valueOf(response.code()));
                     movieResponse = response.body();
-                    sliderRecyclerAdapter.addMovie(movieResponse.getMovies());
+                    moviesList.postValue(movieResponse);
                 }
 
                 @Override
                 public void onFailure(retrofit2.Call<MovieResponse> call, Throwable t) {
                     Log.d("Error", t.getMessage());
                     Toast.makeText(context, "Error fetching data", Toast.LENGTH_SHORT).show();
-                    disconnectedTV.setVisibility(View.VISIBLE);
+                    //disconnectedTV.setVisibility(View.VISIBLE);
                 }
             });
 

@@ -2,13 +2,13 @@ package com.example.searchmovies;
 
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,13 +17,19 @@ import retrofit2.Response;
 public class LoadMoviesViewModel extends ViewModel {
 
     Context context;
-    public Adapter itemAdapter = new Adapter(context, new ArrayList<>());
-    TextView disconnectedTV;
+    private MutableLiveData<MovieResponse> moviesList;
+    private List<MovieResponse> movieResponseList = new ArrayList<>();
 
-    //itemAdapter = new Adapter(, new ArrayList<>());
+    public LoadMoviesViewModel() {
+        moviesList = new MutableLiveData<>();
+    }
+
+    public MutableLiveData<MovieResponse> getMoviesListObserver() {
+        return moviesList;
+
+    }
 
     public void loadJson() {
-        // disconnectedTV = (TextView) findViewById(R.id.tv_disconnect);
         try {
             Client client = new Client();
             Service apiService =
@@ -34,16 +40,14 @@ public class LoadMoviesViewModel extends ViewModel {
                 @Override
                 public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                     MovieResponse movieResponse;
-                    Log.d("status code", String.valueOf(response.code()));
                     movieResponse = response.body();
-                    itemAdapter.addMovie(movieResponse.getMovies());
+                    moviesList.postValue(movieResponse);
                 }
 
                 @Override
                 public void onFailure(retrofit2.Call<MovieResponse> call, Throwable t) {
                     Log.d("Error", t.getMessage());
                     Toast.makeText(context, "Error fetching data", Toast.LENGTH_SHORT).show();
-                    disconnectedTV.setVisibility(View.VISIBLE);
                 }
             });
 

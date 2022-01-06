@@ -40,12 +40,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        //viewHolder.title.setText(items.get(position).getLogin());
         Movie movie = movies.get(position);
 
         viewHolder.title.setText(movie.getTitle() + " # " + position);
 
-        //Log.d("ItemAdapter", movie.getImage());
+
         Glide.with(context)
                 .load("https://image.tmdb.org/t/p/w500/" + movies.get(position).getPosterPath())
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)

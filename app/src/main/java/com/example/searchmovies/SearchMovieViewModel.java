@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import retrofit2.Call;
@@ -17,6 +18,17 @@ public class SearchMovieViewModel extends ViewModel {
     private Adapter itemAdapter;
     private TextView disconnectedTV;
     private boolean isLoading = false;
+    private MutableLiveData<MovieResponse> moviesList;
+
+    public SearchMovieViewModel() {
+        moviesList = new MutableLiveData<>();
+    }
+
+    public MutableLiveData<MovieResponse> getMoviesListObserver() {
+        return moviesList;
+
+    }
+
 
     public void search(String query, int pageNumber) {
         Log.e("MainActivity.Search", "Page number : " + pageNumber);
@@ -33,7 +45,8 @@ public class SearchMovieViewModel extends ViewModel {
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 MovieResponse movieResponse;
                 movieResponse = response.body();
-                itemAdapter.addMovie(movieResponse.getMovies());
+                moviesList.postValue(movieResponse);
+                //
                 isLoading = false;
             }
 
